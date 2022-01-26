@@ -62,4 +62,21 @@ vector<int> Solution::twoSum(const vector<int> &A, int B) {
     }
     return vector<int>{};
 }
+
+//My solution
+vector<int> Solution::twoSum(const vector<int> &A, int B) {
+    vector<int>ans;
+    unordered_map<int,int>umap;
+    for(int i=0;i<A.size();i++)
+    {
+        if(umap.find(B-A[i])!=umap.end())     // searching the complement
+        {
+           ans.push_back(umap[B-A[i]]);
+           ans.push_back(i+1);
+           return ans;
+        }
+        umap.insert({A[i],i+1});                 // if complement isn't found then push the no. in push that no.
+    }
+    return ans;
+}
 ```

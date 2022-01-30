@@ -2,26 +2,24 @@
 
 https://www.interviewbit.com/problems/largest-continuous-sequence-zero-sum
 
-
-
 ## Hint 1
 
-Lets try to reduce the problem to a much simpler problem. 
+Lets try to reduce the problem to a much simpler problem.
 Lets say we have another array sum where
 
-  sum[i] = Sum of all elements from A[0] to A[i]
+sum[i] = Sum of all elements from A[0] to A[i]
 Note that in this array, sum of elements from A[i] to A[j] = Sum[j] - Sum[i-1]
 
 We need to find j and i such that sum of elements from A[i] to A[j] = 0
- Or Sum[j] - Sum[i-1] = 0
- Or Sum[j] = Sum[i-1]
-Now, the problem reduces to finding 2 indices i and j such that sum[i] = sum[j] 
+Or Sum[j] - Sum[i-1] = 0
+Or Sum[j] = Sum[i-1]
+Now, the problem reduces to finding 2 indices i and j such that sum[i] = sum[j]
 How can you solve the above problem ?
 
 ## Hint 2
 
-
 There are two steps:
+
 1. Create cumulative sum array where ith index in this array represents total sum from 1 to ith index element.
 2. Iterate all elements of cumulative sum array and use hashing to find two elements where value at ith index == value at jth index but i != j.
 3. IF element is not present in hash in fill hash table with current element.
@@ -136,3 +134,42 @@ vector<int> Solution::lszero(vector<int> &A) {
     return ans;
 }
 ```
+
+// my Solytion
+
+vector<int> Solution::lszero(vector<int> &A) {
+int n = A.size();
+vector<int>ans;
+int sum[n+1];
+sum[0] = 0;
+for(int i=1;i<=n;i++)
+{
+sum[i] = sum[i-1] + A[i-1];
+//cout<<sum[i]<<" ";
+}
+
+    unordered_map<int,int>umap;
+    int begin,end,length=0;
+    for(int i=0;i<=n;i++)
+    {
+        if(umap.find(sum[i]) != umap.end())
+        {
+            if(length < i - umap[sum[i]])
+            {
+                // cout<<length<<" ";
+                length = i-umap[sum[i]];
+                begin = umap[sum[i]];
+                end = i-1;
+            }
+        }
+        else
+            umap.insert({sum[i],i});
+    }
+
+    for(int i=begin;i<=end;i++)
+    {
+        ans.push_back(A[i]);
+    }
+    return ans;
+
+}
